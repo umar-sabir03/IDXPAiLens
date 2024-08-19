@@ -1,9 +1,16 @@
 package com.pilog.mdm.cloud.idxpailens.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotificationRangeUtils {
+public class PilogUtils {
     public static final int[] TODAY_RANGE = {5, 100};
     public static final int[] YESTERDAY_RANGE = {20, 100};
     public static final int[] LAST_WEEK_RANGE = {50, 200};
@@ -38,4 +45,31 @@ public class NotificationRangeUtils {
                 .findFirst()
                 .orElse("");
     }
+
+    public static String getCurrentDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+    public static String clobToString(Clob data) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            if (data != null) {
+                Reader reader = data.getCharacterStream();
+                BufferedReader br = new BufferedReader(reader);
+                String line;
+                while (null != (line = br.readLine()))
+                    sb.append(line);
+                br.close();
+            }
+        } catch (SQLException es) {
+            es.printStackTrace();
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+
+
 }

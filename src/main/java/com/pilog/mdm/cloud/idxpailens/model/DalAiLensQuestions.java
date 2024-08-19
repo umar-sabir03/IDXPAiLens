@@ -13,8 +13,8 @@ import java.util.Date;
 public class DalAiLensQuestions {
 
     @Id
-    @GenericGenerator(name="gen2",strategy = "com.pilog.mdm.cloud.idxpailens.AiQuestionareIdGenerator")
-    @GeneratedValue(generator = "gen2")
+    @GenericGenerator(name="aiQuestionareGen",strategy = "com.pilog.mdm.cloud.idxpailens.idgenerator.AiQuestionareIdGenerator")
+    @GeneratedValue(generator = "aiQuestionareGen")
     @Column(name = "AUDIT_ID", length = 100)
     private String auditId;
 

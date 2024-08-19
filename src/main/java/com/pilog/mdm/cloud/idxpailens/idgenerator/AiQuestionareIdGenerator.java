@@ -10,7 +10,7 @@ import java.util.UUID;
 public class AiQuestionareIdGenerator implements IdentifierGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException {
-        String str="DAL_AI_LENS_QUESTIONARE";
+        String str="DAL_AI_LENS_QUESTIONARE_";
         String uuid= UUID.randomUUID().toString().replace("-","");
         return str+uuid;
     }
