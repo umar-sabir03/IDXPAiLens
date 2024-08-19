@@ -1,7 +1,10 @@
 package com.pilog.mdm.cloud.idxpailens.repository;
 
 import com.pilog.mdm.cloud.idxpailens.model.SpendAnalysisTestData;
-import com.pilog.mdm.cloud.idxpailens.payloads.*;
+import com.pilog.mdm.cloud.idxpailens.payloads.SpendAnalysisDTO;
+import com.pilog.mdm.cloud.idxpailens.payloads.SpendAnalysisInventoryDTO;
+import com.pilog.mdm.cloud.idxpailens.payloads.SpendAnalysisPurchaseDto;
+import com.pilog.mdm.cloud.idxpailens.payloads.SpendAnalysisVendorDto;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
