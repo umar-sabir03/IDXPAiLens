@@ -3,6 +3,7 @@ package com.pilog.mdm.cloud.idxpailens.controller;
 import com.pilog.mdm.cloud.idxpailens.payloads.*;
 import com.pilog.mdm.cloud.idxpailens.service.IIDXPAiLensService;
 import com.pilog.mdm.cloud.idxpailens.utils.AppConstants;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,10 +131,21 @@ public class IDXPAiLensController {
     }
 
     @PostMapping("/aiInsertorUpdateDatabasedOnId")
-    public ResponseEntity<String> aiInsertorUpdateDatabasedOnId(String tabId,String updateParamArray,String batchId) {
+    public ResponseEntity<String> aiInsertorUpdateDatabasedOnId(
+            @Parameter(description = "GridId", example = "MM_AI_MASS_DATA_PROCESS_CREATE")
+            @RequestParam String tabId,
+
+            @Parameter(
+                    description = "The update parameters in JSON format",
+                    example = "{\"updateIds\": \"DataMapping1,DataMapping2,Characterstics,Reference,Document,FFT\", \"excludeParams\": \"DataMapping1,DataMapping2,FFT\"}"
+            )
+            @RequestParam String updateParamArray,
+
+            @Parameter(description = "The Batch ID", example = "B00000000001346")
+            @RequestParam String batchId)  {
         String resultstr ="";
         try {
-//            resultstr = aiLensService.aiInsertorUpdateDatabasedOnId(request);
+            resultstr = aiLensService.aiInsertorUpdateDatabasedOnId(tabId,updateParamArray,batchId);
         } catch (Exception e) {
             e.printStackTrace();
         }

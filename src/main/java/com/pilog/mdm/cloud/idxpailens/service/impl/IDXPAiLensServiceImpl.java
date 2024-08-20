@@ -1,5 +1,7 @@
 package com.pilog.mdm.cloud.idxpailens.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pilog.mdm.cloud.idxpailens.exception.BadRequestException;
 import com.pilog.mdm.cloud.idxpailens.exception.InternalServerException;
 import com.pilog.mdm.cloud.idxpailens.exception.NotFoundException;
@@ -1067,7 +1069,77 @@ public class IDXPAiLensServiceImpl implements IIDXPAiLensService {
         throw new BadRequestException(HttpStatus.BAD_REQUEST,"invalid domain name","invalid.domain.name");
     }
 
-    private List<String> getcrudQueryData(String tabId) {
+    @Override
+    @Transactional
+    public String aiInsertorUpdateDatabasedOnId(String tabId, String paramArrayStr, String batchId) {
+        String inParamStr = "";
+        Map<String, Object> resultObj = new HashMap<>();
+        Map<String, Object> initParamObj = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            if (paramArrayStr != null && !"".equalsIgnoreCase(paramArrayStr) && !"null".equalsIgnoreCase(paramArrayStr)
+                    && tabId != null && !"".equalsIgnoreCase(tabId) && !"null".equalsIgnoreCase(tabId)) {
+
+                Map<String, Object> basicData = objectMapper.readValue(paramArrayStr, Map.class);
+                String updateIds = (String) basicData.get("updateIds");
+                List<String> updateIdsArr = Arrays.asList(updateIds.split(","));
+                basicData.put("tabId", tabId);
+                basicData.put("batchId", batchId);
+
+                if (updateIdsArr != null && !updateIdsArr.isEmpty()) {
+                    for (String titleName : updateIdsArr) {
+                        List<String> dataList = getCrudQueryData(tabId + titleName);
+                        int updateCount = 0;
+
+                        if (dataList != null && !dataList.isEmpty()) {
+                            for (String str : dataList) {
+                            //    inParamStr =clobToString(clob);
+                                inParamStr=str;
+                                try {
+                                    if (inParamStr != null && !"".equalsIgnoreCase(inParamStr) && !"null".equalsIgnoreCase(inParamStr)) {
+                                        initParamObj = getInitParamObject(inParamStr);
+                                        String insertUpdQuery = (String) initParamObj.get("uuu_insertUpdateQuery");
+                                        insertUpdQuery = insertUpdQuery.replace("$$", "=");
+                                        String paramColumnsStr = (String) initParamObj.get("uuu_paramColumnsStr");
+
+                                        if (insertUpdQuery != null && !"".equalsIgnoreCase(insertUpdQuery) && !"null".equalsIgnoreCase(insertUpdQuery)
+                                                && paramColumnsStr != null && !"".equalsIgnoreCase(paramColumnsStr) && !"null".equalsIgnoreCase(paramColumnsStr)) {
+                                            List<String> paramColumnsList = Arrays.asList(paramColumnsStr.split(","));
+                                            if (paramColumnsList != null && !paramColumnsList.isEmpty()) {
+                                                Map<String, Object> updateMap = new HashMap<>();
+                                                for (String paramColumnName : paramColumnsList) {
+                                                    if (paramColumnName != null && !"".equalsIgnoreCase(paramColumnName) && !"null".equalsIgnoreCase(paramColumnName)) {
+                                                        updateMap.put(paramColumnName, basicData.get(paramColumnName.trim()));
+                                                    }
+                                                }
+                                                System.out.println("selectQuery:::" + insertUpdQuery);
+                                                System.out.println("selectQuerymap:::" + updateMap);
+                                                updateCount += nativeQueriesRepository.executeUpdateSQLNoAudit(insertUpdQuery, updateMap);
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                resultObj.put(titleName,  updateCount);
+                            }
+                        } else {
+                            resultObj.put(titleName, 0);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+             return objectMapper.writeValueAsString(resultObj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<String> getCrudQueryData(String tabId) {
         List<String> intParamObjList = null;
 
         try {

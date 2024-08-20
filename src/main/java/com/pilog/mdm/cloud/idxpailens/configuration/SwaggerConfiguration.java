@@ -22,8 +22,8 @@ public class SwaggerConfiguration {
 
 	private ApiInfo getInfo() {
 		return new ApiInfo ("AiLens Application",
-				"This Project Is developed by ****","1.0","Terms of Service",
-				new springfox.documentation.service.Contact("Somanath The real Pilogian","https://************/","**********@gmail.com"),
+				"This Project Is developed by Pilog Developers","1.0","Terms of Service",
+				new springfox.documentation.service.Contact("pilog","https://************/","**********@gmail.com"),
 				"Licence of API","Licence of URl",Collections.emptyList());
 	}
 }

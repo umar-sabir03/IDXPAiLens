@@ -24,7 +24,7 @@ public class GridRoleLink {
     private String editFlag;
 
     @Lob
-    @Column(name = "GRID_INIT_PARAMS")
+    @Column(name = "GRID_INIT_PARAMS" ,columnDefinition = "CLOB")
     private String gridInitParams;
 
     @Column(name = "NESTED_GRID_ID")

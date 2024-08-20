@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class NativeQueriesRepository {
@@ -54,6 +55,25 @@ public class NativeQueriesRepository {
         query.setParameter("languageId", languageId);
 
         return query.getResultList();
+    }
+
+    public int executeUpdateSQLNoAudit(String queryString, Map<String, Object> params) {
+        try {
+            Query query = entityManager.createNativeQuery(queryString);
+
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                System.out.println("Setting parameter: " + entry.getKey() + " = " + entry.getValue());
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+
+            int affectedRows = query.executeUpdate();
+            System.out.println("Number of rows updated: " + affectedRows);
+
+            return affectedRows;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }
 
